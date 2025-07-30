@@ -68,9 +68,9 @@ async def breadfact(ctx):
 @bot.command(name="breadchat")
 async def breadchat(ctx, *, message: str):
     """Chat with the bread bot using !breadchat <message>"""
-    async with ctx.typing()
     try:
-        reply = await generate_chat_reply(message)
+        async with ctx.typing():
+         reply = await generate_chat_reply(message)
         await ctx.send(reply)
     except Exception as e:
         await ctx.send(f"Error: {e}")
