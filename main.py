@@ -70,7 +70,7 @@ async def breadfact(ctx):
 @bot.command(name="breadchat")
 async def breadchat(ctx):
     reply = await breadchat()
-    await ctx.send(f"{reply}" 🍞)
+    await ctx.send(f"{reply} 🍞")
 
 # Run the bot
 bot.run(DISCORD_TOKEN)
