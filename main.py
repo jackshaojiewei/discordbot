@@ -19,6 +19,19 @@ intents = discord.Intents.default()
 intents.message_content = True
 bot = commands.Bot(command_prefix="!", intents=intents)
 
+# Chat command
+@bot.command()
+async def chat(ctx, *, prompt):
+    try:
+        response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=[{"role": "user", "content": prompt}]
+        )
+        reply = response.choices[0].message["content"].strip()
+        await ctx.send(reply)
+    except Exception as e:
+        await ctx.send(f"Error: {e}")
+
 # Bread fact command
 async def get_bread_fact():
     prompt = "Tell me an interesting fact about bread. Just one fact. Keep it fun but informative."
