@@ -1,4 +1,3 @@
-
 import os
 import discord
 import openai
@@ -6,18 +5,21 @@ from discord.ext import commands
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from dotenv import load_dotenv
 
+# Load environment variables
 load_dotenv()
 DISCORD_TOKEN = os.getenv("DISCORD_TOKEN")
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 TARGET_CHANNEL_ID = int(os.getenv("CHANNEL_ID"))
 
+# Setup OpenAI
 openai.api_key = OPENAI_API_KEY
 
+# Setup bot
 intents = discord.Intents.default()
 intents.message_content = True
 bot = commands.Bot(command_prefix="!", intents=intents)
 
-# Function to get a bread fact using OpenAI
+# Bread fact command
 async def get_bread_fact():
     prompt = "Tell me an interesting fact about bread. Just one fact. Keep it fun but informative."
     response = openai.ChatCompletion.create(
@@ -50,4 +52,5 @@ async def breadfact(ctx):
     fact = await get_bread_fact()
     await ctx.send(f"🍞 {fact}")
 
+# Run the bot
 bot.run(DISCORD_TOKEN)
