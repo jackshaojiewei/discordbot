@@ -204,7 +204,7 @@ async def breadchat(ctx, *, message: str):
 # Run the bot
 bot.run(DISCORD_TOKEN)
 
----
+```
 
 ## 🍞 License
 
