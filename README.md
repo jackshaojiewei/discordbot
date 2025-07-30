@@ -1,14 +1,16 @@
-# 🍞 ChatGPT Discord Bot (with AI Bread Facts!)
+# 🍞 ChatGPT Discord Bot
 
-A Python-based Discord bot that integrates OpenAI’s ChatGPT for conversational AI — with an extra slice of fun: **random bread facts** when prompted!
+A Python-based Discord bot that integrates OpenAI’s ChatGPT for conversational AI with an extra slice of fun: **random bread facts** when prompted, and daily bread facts posted at 9.00 am!
 
 ---
 
 ## 🍞 Features
 
 * AI-powered responses using ChatGPT
-* `/breadfact` command for fun, random bread trivia
+* `!breadfact` command for fun, random bread trivia
+* Daily bread facts posted at 9.00 am everyday
 * Easy environment-based setup with `.env` support
+
 
 ---
 
@@ -62,7 +64,7 @@ python bot.py
 Once running, the bot will respond to:
 
 ```
-!chat What’s the difference between sourdough and rye?
+!breadchat What’s the difference between sourdough and rye?
 ```
 
 or
@@ -78,7 +80,7 @@ or
 ### 🍞 Chat with GPT
 
 ```text
-!chat Write a poem about a baguette in space.
+!breadchat Write a poem about a baguette in space.
 ```
 
 ### 🍞 Bread Fact
@@ -100,10 +102,17 @@ Sample response:
 Uses OpenAI's API (`ChatCompletion`) with a simple message structure:
 
 ```python
-openai.ChatCompletion.create(
-    model="gpt-3.5-turbo",
-    messages=[{"role": "user", "content": prompt}]
-)
+async def generate_chat_reply(message: str) -> str:
+    """Use OpenAI to generate a response to the user's message."""
+    response = await openai.ChatCompletion.acreate(
+        model="gpt-4",
+        messages=[
+            {"role": "system", "content": "You are a friendly and slightly silly bread expert chatbot."},
+            {"role": "user", "content": message}
+        ],
+        max_tokens=200
+    )
+    return response.choices[0].message.content
 ```
 
 ### Bread Fact Command
@@ -133,20 +142,21 @@ openai.api_key = OPENAI_API_KEY
 
 # Setup bot
 intents = discord.Intents.default()
+intents.message_content = True
 bot = commands.Bot(command_prefix="!", intents=intents)
 
 # Chat command
-@bot.command()
-async def chat(ctx, *, prompt):
-    try:
-        response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
-            messages=[{"role": "user", "content": prompt}]
-        )
-        reply = response.choices[0].message["content"].strip()
-        await ctx.send(reply)
-    except Exception as e:
-        await ctx.send(f"Error: {e}")
+async def generate_chat_reply(message: str) -> str:
+    """Use OpenAI to generate a response to the user's message."""
+    response = await openai.ChatCompletion.acreate(
+        model="gpt-4",
+        messages=[
+            {"role": "system", "content": "You are a friendly and slightly silly bread expert chatbot."},
+            {"role": "user", "content": message}
+        ],
+        max_tokens=200
+    )
+    return response.choices[0].message.content
 
 # Bread fact command
 async def get_bread_fact():
@@ -181,6 +191,16 @@ async def breadfact(ctx):
     fact = await get_bread_fact()
     await ctx.send(f"🍞 {fact}")
 
+@bot.command(name="breadchat")
+async def breadchat(ctx, *, message: str):
+    """Chat with the bread bot using !breadchat <message>"""
+    try:
+        async with ctx.typing():
+         reply = await generate_chat_reply(message)
+        await ctx.send(reply)
+    except Exception as e:
+        await ctx.send(f"Error: {e}")
+        
 # Run the bot
 bot.run(DISCORD_TOKEN)
 
