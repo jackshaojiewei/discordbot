@@ -20,7 +20,6 @@ intents.message_content = True
 bot = commands.Bot(command_prefix="!", intents=intents)
 
 # Chat command
-@bot.command(name="breadchat")
 async def breadchat(ctx, *, prompt):
     await ctx.trigger_typing()
     try:
@@ -67,6 +66,11 @@ async def on_ready():
 async def breadfact(ctx):
     fact = await get_bread_fact()
     await ctx.send(f"🍞 {fact}")
+
+@bot.command(name="breadchat")
+async def breadchat(ctx):
+    reply = await breadchat()
+    await ctx.send(f"{reply}" 🍞)
 
 # Run the bot
 bot.run(DISCORD_TOKEN)
