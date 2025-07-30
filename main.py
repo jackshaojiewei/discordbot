@@ -20,8 +20,8 @@ intents.message_content = True
 bot = commands.Bot(command_prefix="!", intents=intents)
 
 # Chat command
-@bot.command()
-async def chat(ctx, *, prompt):
+@bot.command(name="breadchat")
+async def breadchat(ctx, *, prompt):
     await ctx.trigger_typing()
     try:
         response = await openai.ChatCompletion.acreate(
