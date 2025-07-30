@@ -71,9 +71,9 @@ async def breadchat(ctx, *, message: str):
     await ctx.trigger_typing()
     try:
         reply = await generate_chat_reply(message)
-        await ctx.send(reply "🍞")
+        await ctx.send(reply)
     except Exception as e:
-        await ctx.send(f"⚠️ Chat error: {e}")
+        await ctx.send(f"Error: {e}")
         
 # Run the bot
 bot.run(DISCORD_TOKEN)
