@@ -20,7 +20,7 @@ intents.message_content = True
 bot = commands.Bot(command_prefix="!", intents=intents)
 
 # Chat command
-async def breadchat(message: str) -> str:
+async def generate_chat_reply(message: str) -> str:
     """Use OpenAI to generate a response to the user's message."""
     response = await openai.ChatCompletion.acreate(
         model="gpt-4",
@@ -68,7 +68,7 @@ async def breadfact(ctx):
 @bot.command(name="breadchat")
 async def breadchat(ctx, *, message: str):
     """Chat with the bread bot using !breadchat <message>"""
-    await ctx.trigger_typing()
+    async with ctx.typing()
     try:
         reply = await generate_chat_reply(message)
         await ctx.send(reply)
