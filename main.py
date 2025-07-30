@@ -77,3 +77,9 @@ async def breadchat(ctx, *, message: str):
         
 # Run the bot
 bot.run(DISCORD_TOKEN)
+
+---
+
+## 🍞 License
+
+MIT License — do whatever you like, just keep the bread warm 🍞
