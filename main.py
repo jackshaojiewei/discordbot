@@ -20,19 +20,17 @@ intents.message_content = True
 bot = commands.Bot(command_prefix="!", intents=intents)
 
 # Chat command
-async def breadchat(ctx, *, prompt):
-    await ctx.trigger_typing()
-    try:
-        response = await openai.ChatCompletion.acreate(
-            model="gpt-4",
-            messages=[{"role": "system", "content": "You are a friendly and slightly silly bread expert chatbot."},
-                      {"role": "user", "content": message}],
-            max_tokens=200
-        )
-        reply = response.choices[0].message.content
-        await ctx.send(reply)
-    except Exception as e:
-        await ctx.send(f"Error: {e}")
+async def breadchat(message: str) -> str:
+    """Use OpenAI to generate a response to the user's message."""
+    response = await openai.ChatCompletion.acreate(
+        model="gpt-4",
+        messages=[
+            {"role": "system", "content": "You are a friendly and slightly silly bread expert chatbot."},
+            {"role": "user", "content": message}
+        ],
+        max_tokens=200
+    )
+    return response.choices[0].message.content
 
 # Bread fact command
 async def get_bread_fact():
@@ -68,9 +66,14 @@ async def breadfact(ctx):
     await ctx.send(f"🍞 {fact}")
 
 @bot.command(name="breadchat")
-async def breadchat(ctx):
-    reply = await breadchat()
-    await ctx.send(f"{reply} 🍞")
-
+async def breadchat(ctx, *, message: str):
+    """Chat with the bread bot using !breadchat <message>"""
+    await ctx.trigger_typing()
+    try:
+        reply = await generate_chat_reply(message)
+        await ctx.send(reply "🍞")
+    except Exception as e:
+        await ctx.send(f"⚠️ Chat error: {e}")
+        
 # Run the bot
 bot.run(DISCORD_TOKEN)
