@@ -22,12 +22,15 @@ bot = commands.Bot(command_prefix="!", intents=intents)
 # Chat command
 @bot.command()
 async def chat(ctx, *, prompt):
+    await ctx.trigger_typing()
     try:
-        response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
-            messages=[{"role": "user", "content": prompt}]
+        response = await openai.ChatCompletion.acreate(
+            model="gpt-4",
+            messages=[{"role": "system", "content": "You are a friendly and slightly silly bread expert chatbot."},
+                      {"role": "user", "content": message}],
+            max_tokens=200
         )
-        reply = response.choices[0].message["content"].strip()
+        reply = response.choices[0].message.content
         await ctx.send(reply)
     except Exception as e:
         await ctx.send(f"Error: {e}")
@@ -64,11 +67,6 @@ async def on_ready():
 async def breadfact(ctx):
     fact = await get_bread_fact()
     await ctx.send(f"🍞 {fact}")
-
-@bot.command(name='chat')
-async def chat(ctx):
-    reply = await chat()
-    await ctx.send(f"{reply} 🍞")
 
 # Run the bot
 bot.run(DISCORD_TOKEN)
