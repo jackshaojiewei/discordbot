@@ -65,5 +65,10 @@ async def breadfact(ctx):
     fact = await get_bread_fact()
     await ctx.send(f"🍞 {fact}")
 
+@bot.command(name='chat')
+async def chat(ctx):
+    reply = await chat()
+    await ctx.send(f"{reply} 🍞")
+
 # Run the bot
 bot.run(DISCORD_TOKEN)
