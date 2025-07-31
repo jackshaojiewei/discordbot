@@ -56,14 +56,14 @@ def is_similar(fact, history, threshold=0.85):
     return False
 
 async def get_bread_fact():
-    prompt = "Tell me an interesting fact about bread. Just one fact. Keep it fun but informative."
+    prompt = "Tell me one unique fact about bread. Just one fact. Keep it fun and interesting but informative. Avoid repeating well-known facts like the most expensive bread. Don't repeat previous facts. Keep it short, but interesting and educational."
     history = load_fact_history()
 
     for _ in range(5): # Try 5 times to get a unique fact
         response = await openai.ChatCompletion.acreate(
             model="gpt-4",
             messages=[
-                {"role": "system", "content": "You are a bread expert who gives fun and surprising bread facts."},
+                {"role": "system", "content": "You are a bread expert who gives a diverse array of fun and surprising bread facts."},
                 {"role": "user", "content": prompt}
             ]
         )
