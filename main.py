@@ -1,9 +1,11 @@
 import os
 import discord
 import openai
+import difflib
 from discord.ext import commands
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from dotenv import load_dotenv
+
 
 # Load environment variables
 load_dotenv()
@@ -33,17 +35,46 @@ async def generate_chat_reply(message: str) -> str:
     return response.choices[0].message.content
 
 # Bread fact command
+
+FACT_HISTORY_FILE = "facts_history.txt"
+
+def load_fact_history():
+    if not os.path.exists(FACT_HISTORY_FILE):
+        return []
+    with open(FACT_HISTORY_FILE, "r", encoding="utf-8") as f:
+        return [line.strip() for line in f if line.strip()]
+
+def save_fact_to_history(fact):
+    with open(FACT_HISTORY_FILE, "a", encoding="utf-8") as f:
+        f.write(fact + "\n")
+
+def is_similar(fact, history, threshold=0.85):
+    for old_fact in history:
+        similarity = difflib.SequenceMatcher(None, fact.lower(), old_fact.lower()).ratio()
+        if similarity > threshold:
+            return True
+    return False
+
 async def get_bread_fact():
     prompt = "Tell me an interesting fact about bread. Just one fact. Keep it fun but informative."
-    response = openai.ChatCompletion.create(
-        model="gpt-4",
-        messages=[
-            {"role": "system", "content": "You are a bread expert who gives fun and surprising bread facts."},
-            {"role": "user", "content": prompt}
-        ]
-    )
-    fact = response["choices"][0]["message"]["content"]
-    return fact.strip()
+    history = load_fact_history()
+
+    for _ in range(5): # Try 5 times to get a unique fact
+        response = await openai.ChatCompletion.acreate(
+            model="gpt-4",
+            messages=[
+                {"role": "system", "content": "You are a bread expert who gives fun and surprising bread facts."},
+                {"role": "user", "content": prompt}
+            ]
+        )
+        fact = response["choices"][0]["message"]["content"].strip()
+
+        if not is_similar(fact, history):
+            save_fact_to_history(fact)
+            return fact
+
+    # If all facts were too similar, return the last one anyway
+    return fact
 
 # Daily task
 async def send_daily_bread_fact():
