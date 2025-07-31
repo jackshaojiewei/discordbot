@@ -2,6 +2,7 @@ import os
 import discord
 import openai
 import difflib
+import random
 from discord.ext import commands
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from dotenv import load_dotenv
@@ -56,10 +57,21 @@ def is_similar(fact, history, threshold=0.85):
     return False
 
 async def get_bread_fact():
-    prompt = "Tell me one unique fact about bread. Just one fact. Keep it fun and interesting but informative. Avoid repeating well-known facts like the most expensive bread. Don't repeat previous facts. Keep it short, but interesting and educational."
+    prompt_styles = ["Tell me a surprising fact about bread from history.",
+                     "Give me a fun bread fact related to science or chemistry.",
+                     "Share a cultural tradition involving bread from a country.",
+                     "Tell me a weird or little-known bread fact.",
+                     "Tell me about an interesting myth or legend involving bread.",
+                     "Give me a bread-related fact about ancient civilisations.",
+                     "Tell me a modern, quirky fact about bread.",
+                     "Give me a nutritional or health-related bread fact.",
+                     "Share a fact about bread-making tools or techniques.",
+                     "Tell me about an unusual type of bread from somewhere in the world."
+                    ]
     history = load_fact_history()
 
     for _ in range(5): # Try 5 times to get a unique fact
+        chosen_prompt = random.choice(prompt_styles)
         response = await openai.ChatCompletion.acreate(
             model="gpt-4",
             messages=[
