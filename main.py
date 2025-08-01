@@ -106,10 +106,10 @@ async def on_ready():
 @bot.command(name='help')
 async def help_command(ctx):
     help_text = """
-🍞 **Bread Bot Commands:**
-`!breadfact` - Get a fun, unique bread fact.
-`!breadchat <message>` - Chat with the bread bot.
-`!help` - Show this help message.
+**🍞 Bread Bot Commands:**
+🍞 `!breadfact` - Get a fun, unique bread fact.
+🍞 `!breadchat <message>` - Chat with the bread bot.
+🍞 `!help` - Show this help message.
 """
     await ctx.send(help_text)
 
