@@ -71,7 +71,7 @@ async def get_bread_fact():
     history = load_fact_history()
 
     for _ in range(5): # Try 5 times to get a unique fact
-        chosen_prompt = random.choice(prompt_styles)
+        prompt = random.choice(prompt_styles)
         response = await openai.ChatCompletion.acreate(
             model="gpt-4",
             messages=[
