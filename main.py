@@ -103,13 +103,13 @@ async def on_ready():
     scheduler.add_job(send_daily_bread_fact, 'cron', hour=9, minute=0)
     scheduler.start()
 
-@bot.command(name='help')
-async def help_command(ctx):
+@bot.command(name='breadhelp')
+async def breadhelp(ctx):
     help_text = """
 **🍞 Bread Bot Commands:**
 🍞 `!breadfact` - Get a fun, unique bread fact.
 🍞 `!breadchat <message>` - Chat with the bread bot.
-🍞 `!help` - Show this help message.
+🍞 `!breadhelp` - Show this help message.
 """
     await ctx.send(help_text)
 
