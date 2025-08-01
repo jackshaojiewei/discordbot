@@ -105,8 +105,11 @@ async def on_ready():
 
 @bot.command(name='breadfact')
 async def breadfact(ctx):
-    fact = await get_bread_fact()
-    await ctx.send(f"🍞 {fact}")
+    try:
+        fact = await get_bread_fact()
+        await ctx.send(f"🍞 {fact}")
+    except Exception as e:
+        await ctx.send(f"Error: {e}")
 
 @bot.command(name="breadchat")
 async def breadchat(ctx, *, message: str):
